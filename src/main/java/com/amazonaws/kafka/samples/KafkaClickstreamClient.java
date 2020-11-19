@@ -46,10 +46,40 @@ public class KafkaClickstreamClient {
     static boolean noDelay = false;
 
     @Parameter(names = {"--sslEnable", "-ssl"})
-    private static boolean sslEnable = false;
+    static boolean sslEnable = false;
 
     @Parameter(names = {"--mTLSEnable", "-mtls"})
-    private static boolean mTLSEnable = false;
+    static boolean mTLSEnable = false;
+
+    @Parameter(names = {"--glueSchemaRegistry", "-gsr"})
+    static boolean glueSchemaRegistry = false;
+
+    @Parameter(names = {"--gsrRegistryName", "-grn"})
+    static String gsrRegistryName;
+
+    @Parameter(names = {"--gsrSchemaName", "-gsn"})
+    static String gsrSchemaName;
+
+    @Parameter(names = {"--gsrSchemaDescription", "-gsd"})
+    static String gsrSchemaDescription;
+
+    @Parameter(names = {"--saslscramEnable", "-sse"})
+    static boolean saslscramEnable = false;
+
+    @Parameter(names = {"--saslscramUser", "-ssu"})
+    static String saslscramUser;
+
+    @Parameter(names = {"--region", "-reg"})
+    static String region = "us-east-1";
+
+    @Parameter(names = {"--gsrRegion", "-gsrr"})
+    static String gsrRegion = "us-east-1";
+
+    @Parameter(names = {"--gsrAutoRegistration", "-gar"})
+    static boolean gsrAutoRegistration = false;
+
+    @Parameter(names = {"--gsrCompatibilitySetting", "-gcs"})
+    static String gsrCompatibilitySetting;
 
     @Parameter(names = {"--nologgingEvents", "-nle"})
     static boolean nologgingEvents = false;
@@ -108,7 +138,7 @@ public class KafkaClickstreamClient {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads + 1);
         List<RunProducer> executeTasks = new ArrayList<>();
 
-        final Producer<String, ClickEvent> kafkaProducer = new KafkaProducerFactory(propertiesFilePath, sslEnable, mTLSEnable).createProducer();
+        final Producer<String, ClickEvent> kafkaProducer = new KafkaProducerFactory(propertiesFilePath, sslEnable, mTLSEnable, saslscramEnable, glueSchemaRegistry).createProducer();
 
         // Registering a shutdown hook so we can exit cleanly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdown(executeTasks, executor, kafkaProducer)));
@@ -134,7 +164,7 @@ public class KafkaClickstreamClient {
                     logger.info(result);
                 }
             } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                logger.error(Util.stackTrace(e));
                 System.exit(1);
             }
         }
@@ -193,7 +223,7 @@ public class KafkaClickstreamClient {
             jc.usage();
             return;
         }
-
+        ParametersValidator.validate();
         client.runProducer();
     }
 

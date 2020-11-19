@@ -20,7 +20,7 @@
         <kafka.scala.version>2.12</kafka.scala.version>
         <confluent.version>5.2.1</confluent.version>
         <avro.version>1.7.7</avro.version>
-        <log4j.version>2.11.1</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -69,6 +69,19 @@
             <artifactId>jcommander</artifactId>
             <version>1.78</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws.kafka.samples.saslscram</groupId>
+            <artifactId>SaslScramSecretsManagerClient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>software.aws.glue</groupId>
+            <artifactId>schema-registry-serde</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

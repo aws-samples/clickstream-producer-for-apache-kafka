@@ -19,6 +19,7 @@ public class GetStatus implements Runnable {
             }
             logger.info("Execution time so far in milliseconds: {} \n", TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - KafkaClickstreamClient.startTime));
             logger.info("Total events sent: {} \n", Events.getTotalEvents());
+            logger.info("Producer rate per sec: {} \n", (Events.getTotalEvents()/(TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - KafkaClickstreamClient.startTime)/1000)));
 
         }
 
