@@ -77,7 +77,7 @@
         </dependency>
 
         <dependency>
-            <groupId>software.aws.glue</groupId>
+            <groupId>software.amazon.glue</groupId>
             <artifactId>schema-registry-serde</artifactId>
             <version>1.0.0</version>
         </dependency>
