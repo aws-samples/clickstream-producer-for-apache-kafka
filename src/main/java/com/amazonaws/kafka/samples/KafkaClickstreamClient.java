@@ -48,6 +48,9 @@ public class KafkaClickstreamClient {
     @Parameter(names = {"--sslEnable", "-ssl"})
     static boolean sslEnable = false;
 
+    @Parameter(names = {"--iamEnable", "-iam"})
+    static boolean iamEnable = false;
+
     @Parameter(names = {"--mTLSEnable", "-mtls"})
     static boolean mTLSEnable = false;
 
@@ -138,7 +141,8 @@ public class KafkaClickstreamClient {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads + 1);
         List<RunProducer> executeTasks = new ArrayList<>();
 
-        final Producer<String, ClickEvent> kafkaProducer = new KafkaProducerFactory(propertiesFilePath, sslEnable, mTLSEnable, saslscramEnable, glueSchemaRegistry).createProducer();
+        logger.info("parameters: propertiesFilePath {} sslEnable: {} mTLSEnable: {} iamEnable: {} saslscramEnable: {} glueSchemaRegistry: {}", propertiesFilePath, sslEnable, mTLSEnable, iamEnable, saslscramEnable, glueSchemaRegistry);
+        final Producer<String, ClickEvent> kafkaProducer = new KafkaProducerFactory(propertiesFilePath, sslEnable, mTLSEnable, iamEnable, saslscramEnable, glueSchemaRegistry).createProducer();
 
         // Registering a shutdown hook so we can exit cleanly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> shutdown(executeTasks, executor, kafkaProducer)));

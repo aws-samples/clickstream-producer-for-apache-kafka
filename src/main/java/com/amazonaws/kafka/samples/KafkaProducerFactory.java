@@ -13,6 +13,7 @@ import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.config.SslConfigs;
+import org.apache.kafka.common.protocol.types.Field;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,6 +41,7 @@ class KafkaProducerFactory {
     private final String propertiesFilePath;
     private final Boolean sslEnable;
     private final Boolean mTLSEnable;
+    private final Boolean iamEnable;
     private final Boolean saslScramEnable;
     private final Boolean glueSchemaRegistry;
     private static final Logger logger = LogManager.getLogger(KafkaClickstreamClient.class);
@@ -60,7 +62,7 @@ class KafkaProducerFactory {
         return "org.apache.kafka.common.security.scram.ScramLoginModule required username=" + KafkaClickstreamClient.saslscramUser + " password=" + password + ";";
     }
 
-    KafkaProducerFactory(String propertiesFilePath, Boolean sslEnable, Boolean mTLSEnable, Boolean saslScramEnable, Boolean glueSchemaRegistry) {
+    KafkaProducerFactory(String propertiesFilePath, Boolean sslEnable, Boolean mTLSEnable, Boolean iamEnable, Boolean saslScramEnable, Boolean glueSchemaRegistry) {
         this.propertiesFilePath = propertiesFilePath;
         if (mTLSEnable) {
             this.sslEnable = true;
@@ -68,6 +70,7 @@ class KafkaProducerFactory {
             this.sslEnable = sslEnable;
         }
         this.mTLSEnable = mTLSEnable;
+        this.iamEnable = iamEnable;
         this.saslScramEnable = saslScramEnable;
         this.glueSchemaRegistry = glueSchemaRegistry;
     }
@@ -92,6 +95,14 @@ class KafkaProducerFactory {
                 producerProps.setProperty(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, loadProps.getProperty("SSL_KEYSTORE_PASSWORD_CONFIG", SSL_KEYSTORE_PASSWORD_CONFIG).equals("") ? SSL_KEYSTORE_PASSWORD_CONFIG : loadProps.getProperty("SSL_KEYSTORE_PASSWORD_CONFIG", SSL_KEYSTORE_PASSWORD_CONFIG));
                 producerProps.setProperty(SslConfigs.SSL_KEY_PASSWORD_CONFIG, loadProps.getProperty("SSL_KEY_PASSWORD_CONFIG", SSL_KEY_PASSWORD_CONFIG).equals("") ? SSL_KEY_PASSWORD_CONFIG : loadProps.getProperty("SSL_KEY_PASSWORD_CONFIG", SSL_KEY_PASSWORD_CONFIG));
             }
+            if (iamEnable) {
+                logger.info("IAM auth is enabled ");
+                producerProps.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+                producerProps.setProperty(SaslConfigs.SASL_MECHANISM, "AWS_MSK_IAM");
+                producerProps.setProperty(SaslConfigs.SASL_JAAS_CONFIG, "software.amazon.msk.auth.iam.IAMLoginModule required;");
+                producerProps.setProperty(SaslConfigs.SASL_CLIENT_CALLBACK_HANDLER_CLASS, "software.amazon.msk.auth.iam.IAMClientCallbackHandler");
+            }
+
             if (saslScramEnable) {
                 producerProps.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
                 producerProps.setProperty(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-512");
@@ -130,6 +141,13 @@ class KafkaProducerFactory {
             if (sslEnable) {
                 producerProps.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, SECURITY_PROTOCOL_CONFIG);
                 producerProps.setProperty(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, SSL_TRUSTSTORE_LOCATION_CONFIG);
+            }
+            if (iamEnable) {
+                logger.info("IAM auth is enabled ");
+                producerProps.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+                producerProps.setProperty(SaslConfigs.SASL_MECHANISM, "AWS_MSK_IAM");
+                producerProps.setProperty(SaslConfigs.SASL_JAAS_CONFIG, "software.amazon.msk.auth.iam.IAMLoginModule required;");
+                producerProps.setProperty(SaslConfigs.SASL_CLIENT_CALLBACK_HANDLER_CLASS, "software.amazon.msk.auth.iam.IAMClientCallbackHandler");
             }
             if (mTLSEnable) {
                 producerProps.setProperty(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, SSL_KEYSTORE_LOCATION_CONFIG);
