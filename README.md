@@ -86,3 +86,10 @@ The library needs to be installed first before creating the jar file for the con
    ```
    java -jar KafkaClickstreamClient-1.0-SNAPSHOT.jar -t ExampleTopic -pfp /tmp/kafka/producer.properties_msk -nt 8 -rf 300 -iam
    ```
+
+   ### Docker Commands
+
+   ```
+  docker build . -t clickstream-producer:latest
+  docker run --rm -p 3800:3800 -e REGION=us-east-1 -e BROKERS=localhost:9092 -e TOPIC=click-stream -e BATCHSIZE=16384 -e LINGERMS=0 -e BUFFERMEMORY=33554432 -e NMTRD=1 clickstream-producer 
+  ```
