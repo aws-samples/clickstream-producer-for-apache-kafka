@@ -45,7 +45,7 @@ WORKDIR clickstream-producer-for-apache-kafka
 RUN mvn clean install -f pom.xml
 
 # add properties files 
-ADD producer.properties_msk /opt/producer.properties_msk
+ADD producer.properties /opt/producer.properties
 ADD kafka-producer-consumer.yml /opt/kafka-producer-consumer.yml
 
 RUN mv target/KafkaClickstreamClient-1.0-SNAPSHOT.jar /opt
