@@ -8,9 +8,9 @@ echo -e "\n\n\nUpdated file contents:\n $(cat /etc/hosts)"
 
 echo $BROKERS, $BATCHSIZE, $LINGERMS, $BUFFERMEMORY
 sed -i "s/BROKERS/${BROKERS}/g" /opt/producer.properties
-sed -i "s/HCTABEZIS/${BATCHSIZE}/g" /opt/producer.properties
-sed -i "s/RENGIL/${LINGERMS}/g" /opt/producer.properties
-sed -i "s/MEMBUFFCNFG/${BUFFERMEMORY}/g" /opt/producer.properties
+sed -i "s/BATCHSIZE/${BATCHSIZE}/g" /opt/producer.properties
+sed -i "s/LINGERMS/${LINGERMS}/g" /opt/producer.properties
+sed -i "s/BUFFERMEMORY/${BUFFERMEMORY}/g" /opt/producer.properties
 
 echo Starting Kafka producer
 
