@@ -26,6 +26,7 @@ import java.util.Properties;
 
 class KafkaProducerFactory {
 
+
     private final String BOOTSTRAP_SERVERS_CONFIG = "http://127.0.0.1:9092";
     private final String SCHEMA_REGISTRY_URL_CONFIG = "http://127.0.0.1:8081";
     private final String ACKS_CONFIG = "all";
@@ -38,6 +39,9 @@ class KafkaProducerFactory {
     private final String SSL_KEYSTORE_PASSWORD_CONFIG = "password";
     private final String SSL_KEY_PASSWORD_CONFIG = "password";
     private final String CLIENT_ID_CONFIG = "clickstream-producer";
+    private final String BUFFER_MEMORY_CONFIG = "33554432";
+    private final String BATCH_SIZE_CONFIG = "16384";
+    private final String LINGER_MS_CONFIG = "0";
     private final String propertiesFilePath;
     private final Boolean sslEnable;
     private final Boolean mTLSEnable;
@@ -184,6 +188,10 @@ class KafkaProducerFactory {
             producerProps.setProperty(ProducerConfig.ACKS_CONFIG, ACKS_CONFIG);
             producerProps.setProperty(ProducerConfig.RETRIES_CONFIG, RETRIES_CONFIG);
         }
+
+        producerProps.setProperty(ProducerConfig.BATCH_SIZE_CONFIG, loadProps.getProperty("BATCH_SIZE_CONFIG", BATCH_SIZE_CONFIG).equals("") ? BATCH_SIZE_CONFIG : loadProps.getProperty("BATCH_SIZE_CONFIG", BATCH_SIZE_CONFIG));
+        producerProps.setProperty(ProducerConfig.LINGER_MS_CONFIG, loadProps.getProperty("LINGER_MS_CONFIG", LINGER_MS_CONFIG).equals("") ? LINGER_MS_CONFIG : loadProps.getProperty("LINGER_MS_CONFIG", LINGER_MS_CONFIG));
+        producerProps.setProperty(ProducerConfig.BUFFER_MEMORY_CONFIG, loadProps.getProperty("BUFFER_MEMORY_CONFIG", BUFFER_MEMORY_CONFIG).equals("") ? BUFFER_MEMORY_CONFIG : loadProps.getProperty("BUFFER_MEMORY_CONFIG", BUFFER_MEMORY_CONFIG));
 
         return new KafkaProducer<>(producerProps);
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="ERROR" shutdownHook="disable">
+<Configuration status="INFO" shutdownHook="disable">
     <Properties>
         <Property name="basePath">/tmp</Property>
     </Properties>
@@ -18,10 +18,10 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Root level="error">
+        <Root level="info">
             <AppenderRef ref="stdout"/>
         </Root>
-        <Logger name="org.apache.kafka.clients" level="warn" additivity="false">
+        <Logger name="org.apache.kafka.clients" level="info" additivity="false">
             <AppenderRef ref="stdout"/>
             <AppenderRef ref="fileLogger1"/>
         </Logger>

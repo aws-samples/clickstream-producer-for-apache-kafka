@@ -1,0 +1,8 @@
+lowercaseOutputName: true
+rules:
+  - pattern: kafka.producer<type=producer-metrics, client-id=(.+)><>(.+):\w* 
+    name: kafka_producer_$2
+  - pattern: kafka.consumer<type=consumer-metrics, client-id=(.+)><>(.+):\w* 
+    name: kafka_consumer_$2
+  - pattern: kafka.consumer<type=consumer-fetch-manager-metrics, client-id=(.+)><>(.+):\w*  
+    name: kafka_consumer_$2
