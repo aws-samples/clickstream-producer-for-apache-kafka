@@ -37,8 +37,8 @@ The library needs to be installed first before creating the jar file for the con
 
 ### Clone and install the jar file
 
-    git clone https://github.com/aws-samples/sasl-scram-secrets-manager-client-for-msk.git
-    cd sasl-scram-secrets-manager-client-for-msk
+    git clone https://github.com/aws-samples/clickstream-producer-for-apache-kafka.git
+    cd clickstream-producer-for-apache-kafka
     mvn clean install -f pom.xml
 
 ### Clone the repository and install the jar file.  
@@ -84,7 +84,7 @@ The library needs to be installed first before creating the jar file for the con
    ### Example usage with IAM authentication using EC2 instance profile:
 
    ```
-   java -jar KafkaClickstreamClient-1.0-SNAPSHOT.jar -t ExampleTopic -pfp /tmp/kafka/producer.properties_msk -nt 8 -rf 300 -iam
+   java -jar KafkaClickstreamClient-1.0-SNAPSHOT.jar -t ExampleTopic -pfp /tmp/kafka/producer.properties_msk -nt 8 -rf 300 -iam -gsr -gar
    ```
 
    ### Docker Commands
