@@ -32,19 +32,23 @@ This producer can be used to generate other types of events by modifying the Run
 
 ## Install
 
+### Create your /tmp/kafka directory
+    mkdir -p /tmp/kafka
+    cd /tmp/kafka
+
 This consumer depends on another library to get secrets from AWS Secrets Manager for SAS/SCRAM authentication with Amazon MSK.
 The library needs to be installed first before creating the jar file for the consumer.
 
-### Create your /tmp/kafka directory
-
 ### Clone and install the jar file
 
-    git clone https://github.com/aws-samples/clickstream-producer-for-apache-kafka.git
-    cd clickstream-producer-for-apache-kafka
+    git clone https://github.com/aws-samples/sasl-scram-secrets-manager-client-for-msk.git
+    cd sasl-scram-secrets-manager-client-for-msk
     mvn clean install -f pom.xml
 
 ### Clone the repository and install the jar file.  
 
+    git clone https://github.com/aws-samples/clickstream-producer-for-apache-kafka.git
+    cd clickstream-producer-for-apache-kafka
     mvn clean package -f pom.xml
     
    ### The producer accepts a number of command line parameters:
