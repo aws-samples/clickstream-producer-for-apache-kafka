@@ -1,16 +1,39 @@
-FROM centos:latest
+FROM public.ecr.aws/docker/library/centos:latest
 
 RUN cd /etc/yum.repos.d/
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
 RUN yum install -y wget tar openssh-server openssh-clients sysstat sudo which openssl hostname
-RUN yum install -y java-1.8.0-openjdk-devel
+RUN yum install -y java-17-openjdk java-17-openjdk-devel 
 RUN yum install -y epel-release &&\
     yum install -y jq &&\
-    yum install -y python38 &&\
     yum install -y nmap-ncat git
-ARG MAVEN_VERSION=3.5.4
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+    
+# Verify Java installation
+RUN java -version && javac -version
+
+# First install required dependencies
+RUN yum groupinstall -y "Development Tools" && \
+    yum install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel make
+
+# Download and install Python3.12
+RUN cd /tmp && \
+    wget https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz && \
+    tar xzf Python-3.12.0.tgz && \
+    cd Python-3.12.0 && \
+    ./configure --enable-optimizations && \
+    make && \
+    make altinstall && \
+    cd /tmp && \
+    rm -rf Python-3.12.0* 
+
+# Verify installation
+RUN python3.12 --version
+
+ARG MAVEN_VERSION=3.9.6
 
 # Maven
 RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
@@ -23,12 +46,15 @@ ENV maven.home $M2_HOME
 ENV M2 $M2_HOME/bin
 ENV PATH $M2:$PATH
 
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python3 get-pip.py
-RUN pip3 install awscli
+RUN wget https://bootstrap.pypa.io/get-pip.py && \
+    python3.12 get-pip.py && \
+    rm get-pip.py
+
+# Install awscli w python3.12
+RUN pip3.12 install awscli
 
 ENV SCALA_VERSION 2.13
-ENV KAFKA_VERSION 2.7.0
+ENV KAFKA_VERSION 3.7.0
 
 # Prometheus Java agent
 RUN wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.13.0/jmx_prometheus_javaagent-0.13.0.jar
