@@ -32,6 +32,10 @@ This producer can be used to generate other types of events by modifying the Run
 
 ## Install
 
+### Create your /tmp/kafka directory
+    mkdir -p /tmp/kafka
+    cd /tmp/kafka
+
 This consumer depends on another library to get secrets from AWS Secrets Manager for SAS/SCRAM authentication with Amazon MSK.
 The library needs to be installed first before creating the jar file for the consumer.
 
@@ -43,6 +47,8 @@ The library needs to be installed first before creating the jar file for the con
 
 ### Clone the repository and install the jar file.  
 
+    git clone https://github.com/aws-samples/clickstream-producer-for-apache-kafka.git
+    cd clickstream-producer-for-apache-kafka
     mvn clean package -f pom.xml
     
    ### The producer accepts a number of command line parameters:
@@ -84,7 +90,7 @@ The library needs to be installed first before creating the jar file for the con
    ### Example usage with IAM authentication using EC2 instance profile:
 
    ```
-   java -jar KafkaClickstreamClient-1.0-SNAPSHOT.jar -t ExampleTopic -pfp /tmp/kafka/producer.properties_msk -nt 8 -rf 300 -iam
+   java -jar KafkaClickstreamClient-1.0-SNAPSHOT.jar -t ExampleTopic -pfp /tmp/kafka/producer.properties_msk -nt 8 -rf 300 -iam -gsr -gar
    ```
 
    ### Docker Commands
