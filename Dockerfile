@@ -8,7 +8,6 @@ RUN yum install -y wget tar openssh-server openssh-clients sysstat sudo which op
 RUN yum install -y java-1.8.0-openjdk-devel
 RUN yum install -y epel-release &&\
     yum install -y jq &&\
-    yum install -y python38 &&\
     yum install -y nmap-ncat git
 ARG MAVEN_VERSION=3.5.4
 
@@ -22,10 +21,6 @@ ENV M2_HOME /usr/share/maven
 ENV maven.home $M2_HOME
 ENV M2 $M2_HOME/bin
 ENV PATH $M2:$PATH
-
-RUN wget https://bootstrap.pypa.io/get-pip.py
-RUN python3 get-pip.py
-RUN pip3 install awscli
 
 ENV SCALA_VERSION 2.13
 ENV KAFKA_VERSION 2.7.0
